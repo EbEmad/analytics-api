@@ -7,3 +7,4 @@ sqlalchemy
 timescaledb
 requests
 pandas
+numpy
