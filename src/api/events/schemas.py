@@ -6,6 +6,13 @@ class EventSchema(BaseModel):
     id: int
 
 
+class EventCreateSchema(BaseModel):
+    path: str
+
+class EventUpdateSchema(BaseModel):
+    description: str
+
+
 class EventlistSchema(BaseModel):
-    result: list[EventSchema]
+    results: List[EventSchema]
     count: int
