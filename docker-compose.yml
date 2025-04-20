@@ -21,3 +21,11 @@ services:
           path: reqirements.txt
         - action: rebuild
           path: docker-compose.yml
+  db_service:
+    image: timescale/timescaledb:latest-pg17
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=2003
+      - POSTGRES_DB=analytic
+    ports:
+      - "5432:5432"
