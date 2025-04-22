@@ -1,10 +1,10 @@
+from contextlib import asynccontextmanager
 from typing import Union
 from api.events import router as events_router
 from fastapi import FastAPI
 from pydantic import BaseModel
-app = FastAPI()
 
-app.include_router(events_router,prefix="/api/events")
+from api.db.session import init_db
 # /api/events
 
 products_db=[
@@ -16,11 +16,17 @@ products_db=[
 ]
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_db()
+    yield
+app = FastAPI(lifespan=lifespan)
 
 @app.get("/healthz")
 def read_root():
     return {"Message": "weclome to the ecommerece API"}
 
+app.include_router(events_router,prefix="/api/events")
 
 @app.get("/products")
 def read_item(item_id: int, q: Union[str, None] = None):
