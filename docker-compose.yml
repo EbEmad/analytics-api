@@ -4,8 +4,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      - PORT=8002
     env_file:
       - .env
     ports:
@@ -21,6 +19,7 @@ services:
           path: reqirements.txt
         - action: rebuild
           path: docker-compose.yml
+# postgresql+psycopg://root:2003@localhost:5432/analytic
   db_service:
     image: timescale/timescaledb:latest-pg17
     environment:

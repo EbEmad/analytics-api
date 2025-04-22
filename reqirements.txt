@@ -8,3 +8,4 @@ timescaledb
 requests
 pandas
 numpy
+python-decouple # python-dotenv
