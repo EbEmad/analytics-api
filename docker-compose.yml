@@ -28,4 +28,4 @@ services:
       - POSTGRES_PASSWORD=2003
       - POSTGRES_DB=analytic
     ports:
-      - "5432:5432"
+      - "5433:5432"
