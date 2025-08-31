@@ -1,6 +1,6 @@
 
 import sqlmodel
-from sqlmodel import SQLModel, create_engine
+from sqlmodel import SQLModel, create_engine,Session
 from .config import DATABASE_URL
 
 if DATABASE_URL == "":
@@ -14,3 +14,8 @@ engine=sqlmodel.create_engine(DATABASE_URL)
 def init_db():
     print("creating database")
     SQLModel.metadata.create_all(engine)
+
+
+def get_session():
+    with Session(session) as session:
+        yield session
