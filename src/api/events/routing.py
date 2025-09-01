@@ -4,8 +4,17 @@ from .schemas import EventSchema,EventListSchema
 router = APIRouter()
 
 @router.get("/")
-def read_events()->EventListSchema:
+def create_event()->EventListSchema:
     return {"items": [{'id':1},{'id': 2},{'id': 3}]}
+
+
+@router.post("/")
+def read_event(dct:dict={})->EventSchema:
+    print(dct)
+    return {
+        "id": 123
+        }
+
 
 
 @router.get("/{event_id}")
