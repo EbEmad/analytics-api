@@ -19,6 +19,12 @@ services:
           path: reqirements.txt
         - action: rebuild
           path: docker-compose.yml
+    networks:
+      - analytic-api
+    depends_on:
+      db_service:
+        condition: service_healthy
+          
 # postgresql+psycopg://root:2003@localhost:5432/analytic
   db_service:
     image: timescale/timescaledb:latest-pg17
@@ -27,4 +33,16 @@ services:
       - POSTGRES_PASSWORD=2003
       - POSTGRES_DB=analytic
     ports:
-      - "5433:5432"
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d analytic"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - analytic-api
+
+networks:
+  analytic-api:
+    driver: bridge
