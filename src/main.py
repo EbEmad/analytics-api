@@ -1,8 +1,18 @@
 from typing import Union
 from fastapi import FastAPI
 from api.events import router as event_router
+from contextlib import asynccontextmanager
+from api.db.session import init_db
 
-app=FastAPI()
+
+
+@asynccontextmanager
+async def lifespan(app:FastAPI):
+    init_db()
+    yield
+    # clean up
+
+app=FastAPI(lifespan=lifespan)
 app.include_router(event_router,prefix='/api/events')
 
 @app.get("/")
@@ -18,3 +28,9 @@ def read_item(item_id:int,q:Union[str,None]=None):
 @app.get("/healthz")
 def read_api_health():
     return {"status": "ok"}
+
+
+
+# @app.on_event("startup")
+# def on_startup():
+#     print("init method for db")
