@@ -2,19 +2,28 @@
 from fastapi import APIRouter,Depends
 import os
 from api.db.session import get_session
-from sqlmodel import Session
+from sqlmodel import Session,select
 from .models import EventModel,EventListSchema,EventCreateSchema,EventUpdateSchema
 router = APIRouter()
 
 @router.post("/",response_model=EventModel)
 def create_event(payload:EventCreateSchema,session:Session=Depends(get_session)):
     data=payload.model_dump()
-    return {"items": [{'id':1},{'id': 2},{'id': 3}],**data}
-
-@router.get("/")
-def read_event()->EventListSchema:
+    print(f"data:{data}")
+    obj=EventModel.model_validate(data)
+    print(f"obj:{obj}")
+    session.add(obj)
+    session.commit()
+    session.refresh(obj)
+    return obj
+@router.get("/",response_model=EventListSchema)
+def read_events(session:Session=Depends(get_session)):
+    # a bunch of items in a table
+    #query="select * from eventmodel"
+    query=select(EventModel).order_by(EventModel.id.asc()).limit(10)
+    result=session.exec(query).all()
     print(os.environ.get("DATABASE_URL"))
-    return {"items": [{'id':1},{'id': 2},{'id': 3}]}
+    return {"items": result}
 
 
 # @router.post("/")
